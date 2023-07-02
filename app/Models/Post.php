@@ -11,18 +11,10 @@ class Post extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    // public function posts(){
-
-    //    //$this->belongsTo(Category::class);
-
-    //    // public function posts(){
-    //    $this->hasMany(Post::class);
-    // // }
-    // }
+     
+    protected $fillable = ['name', 'description', 'category_id'];
     public function category(){
        return $this->belongsTo(Category::class);
       }
-    public function latestPost(){
-        return $this->posts()->latest->first();
-    }
+  
 }

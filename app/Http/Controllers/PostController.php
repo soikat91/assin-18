@@ -21,36 +21,53 @@ class PostController extends Controller
 
 // task-6
 
-function getCount($categoryId){
+ function getCount($categoryId){
 
-    $category=Category::findOrFail($categoryId);
+//     // $category=Category::findOrFail($categoryId);
 
-    if($category){
-        return $category->posts->count();
-    }else{
-        echo "Not Category Id Found.Please Valid Id insert";
-    }
+//     // if($category){
+//     //     return $category->posts->count();
+//     // }else{
+//     //     echo "Not Category Id Found.Please Valid Id insert";
+//     // }
+     //$postCount=Post::where('category_id',$categoryId)->count();
+     $postCount=Post::where('category_id',$categoryId)->count();
+    return $postCount;
 
     
+ }
+
+// task-7
+function deletePost($id){
+
+    // $deletePost=DB::table('posts')->find('4')->delete();
+    // return $deletePost;
+
+    // $delete=Post::latest();
+    // return $delete->onlyTrashed();
+
+    //$delete=Post::withTrashed()->where('id',4)->get();
+
+    // $delete=DB::table('posts')->find($id)
+    //             ->delete();
+
+    $delete=Post::findOrFail($id)->delete();  
+    
+    if($delete){
+        return "successfully soft deleted";
+    }else{
+        return "Failed Soft Deleted";
+    }
+
 }
 
+// task-8
 
-// function deletePost($id){
+public function getSoftData(){
 
-//     // $deletePost=DB::table('posts')->find('4')->delete();
-//     // return $deletePost;
-
-//     // $delete=Post::latest();
-//     // return $delete->onlyTrashed();
-
-//     //$delete=Post::withTrashed()->where('id',4)->get();
-
-//     // $delete=DB::table('posts')->find($id)
-//     //             ->delete();
-
-//                 $delete=Post::findOrFail($id)->delete();   
-//               return $delete;
-// }
+    $softData=Post::onlyTrashed()->get();
+    return $softData;
+}
 
 
 
@@ -84,12 +101,20 @@ function getCategoryIdPost($id){
 
 function getlatestPosts($id){
 
-      $res=Category::find($id);
-      $r=$res->latestPost();
-      return $r;
+      $latestPost=Category::findOrFail($id)->latestPost();     
+      return $latestPost;
     
 }
 
+
+// task -12
+
+function getLatestCategoryPosts(){
+
+    $categoriesPost=Category::all();
+
+    return view('categories',compact('categoriesPost'));
+}
 
 
 
@@ -104,157 +129,157 @@ function getlatestPosts($id){
 
 // 2
 
-   public function excerptDescription()
-   {
-       $posts = DB::table('posts')
-           ->select('excerpt', 'description')
-           ->get();
+//    public function excerptDescription()
+//    {
+//        $posts = DB::table('posts')
+//            ->select('excerpt', 'description')
+//            ->get();
         
-       return $posts;
-   }
+//        return $posts;
+//    }
 
-//    3
-   public function distinctSelectMethod()
-   {
-       $posts = DB::table('posts')->select('min_to_read')->distinct()->get();
-       return $posts;
-   }
+// //    3
+//    public function distinctSelectMethod()
+//    {
+//        $posts = DB::table('posts')->select('min_to_read')->distinct()->get();
+//        return $posts;
+//    }
 
-// 4
-   public function retriveFristData ()
-   {
-       $posts = DB::table('posts')
-           ->where('id', 2)
-           ->first();
-       return $posts->description;
-   }
+// // 4
+//    public function retriveFristData ()
+//    {
+//        $posts = DB::table('posts')
+//            ->where('id', 2)
+//            ->first();
+//        return $posts->description;
+//    }
 
-// 5
-   public function description()
-   {
-       $posts = DB::table('posts')
-           ->where('id', 2)
-           ->value('description');
-       return $posts;
-   }
-
-
-// 7
-   public function titleColumn()
-   {
-       $posts = DB::table('posts')
-           ->pluck('title');
-
-       return $posts;
-   }
-
-// 8
-   public function insertData()
-   {
-
-       $posts = DB::table('posts')->insert([
-           'title' => 'X',
-           'slug' => 'X',
-           'excerpt' => 'excerpt',
-           'description' => 'description',
-           'is_published' => true,
-           'min_to_read' => 3,
-       ]);
-       return $posts;
-   }
+// // 5
+//    public function description()
+//    {
+//        $posts = DB::table('posts')
+//            ->where('id', 2)
+//            ->value('description');
+//        return $posts;
+//    }
 
 
-//9
-   public function update()
-   {
-       $update = DB::table('posts')
-           ->where('id',  2)
-           ->update([
-               'excerpt'    => 'Laravel 10',
-               'description' => 'Laravel 10',
-           ]);
-       return $update;
-   }
+// // 7
+//    public function titleColumn()
+//    {
+//        $posts = DB::table('posts')
+//            ->pluck('title');
 
-//    10
-   public function delete()
-   {
-       $delete = DB::table('posts')
-           ->where('id', 3)
-           ->delete();
-       return $delete;
-   }
+//        return $posts;
+//    }
+
+// // 8
+//    public function insertData()
+//    {
+
+//        $posts = DB::table('posts')->insert([
+//            'title' => 'X',
+//            'slug' => 'X',
+//            'excerpt' => 'excerpt',
+//            'description' => 'description',
+//            'is_published' => true,
+//            'min_to_read' => 3,
+//        ]);
+//        return $posts;
+//    }
 
 
-   //14
+// //9
+//    public function update()
+//    {
+//        $update = DB::table('posts')
+//            ->where('id',  2)
+//            ->update([
+//                'excerpt'    => 'Laravel 10',
+//                'description' => 'Laravel 10',
+//            ]);
+//        return $update;
+//    }
 
-   public function minReadData()
-   {
-       $posts = DB::table('posts')->whereBetween('min_to_read', [1, 5])->get();
-       return $posts;
-   }
+// //    10
+//    public function delete()
+//    {
+//        $delete = DB::table('posts')
+//            ->where('id', 3)
+//            ->delete();
+//        return $delete;
+//    }
 
-   //15
-   public function incrementByOne()
-   {
-       $posts = DB::table('posts')
-           ->where('id', 3)
-           ->increment('min_to_read');
-       return $posts;
-   }
 
-   function insertIgnore(){
-    $posts = [
-        [
-            'title' => 'First Post',
-            'slug' => 'first-post',
-            'description' => 'This is the content of the first post.',
-            'excerpt'=>'sdsd'
-        ],
-        [
-            'title' => 'Second Post',
-            'slug' => 'second-post',
-            'description' => 'This is the content of the second post.',
-            'excerpt'=>'sdsd'
-        ],
-        [
-            'title' => 'First Post',
-            'slug' => 'first-post', // This post will be ignored due to duplicate title/slug
-            'description' => 'This is a duplicate post and will be ignored.',
-            'excerpt'=>'sdsd'
-        ],
-    ];
+//    //14
+
+//    public function minReadData()
+//    {
+//        $posts = DB::table('posts')->whereBetween('min_to_read', [1, 5])->get();
+//        return $posts;
+//    }
+
+//    //15
+//    public function incrementByOne()
+//    {
+//        $posts = DB::table('posts')
+//            ->where('id', 3)
+//            ->increment('min_to_read');
+//        return $posts;
+//    }
+
+//    function insertIgnore(){
+//     $posts = [
+//         [
+//             'title' => 'First Post',
+//             'slug' => 'first-post',
+//             'description' => 'This is the content of the first post.',
+//             'excerpt'=>'sdsd'
+//         ],
+//         [
+//             'title' => 'Second Post',
+//             'slug' => 'second-post',
+//             'description' => 'This is the content of the second post.',
+//             'excerpt'=>'sdsd'
+//         ],
+//         [
+//             'title' => 'First Post',
+//             'slug' => 'first-post', // This post will be ignored due to duplicate title/slug
+//             'description' => 'This is a duplicate post and will be ignored.',
+//             'excerpt'=>'sdsd'
+//         ],
+//     ];
     
-    $result = DB::table('posts')->insertOrIgnore($posts);
+//     $result = DB::table('posts')->insertOrIgnore($posts);
 
-    return $result;
+//     return $result;
     
-    // if ($result) {
-    //     echo "Insertion successful!";
-    // } else {
-    //     echo "No records were inserted.";
-    // }
-   }
+//     // if ($result) {
+//     //     echo "Insertion successful!";
+//     // } else {
+//     //     echo "No records were inserted.";
+//     // }
+//    }
 
 
-   function getData(){
+//    function getData(){
 
-    //customizing pagination view command
-    // php artisan vendor:publish --tag=laravel-pagination
+//     //customizing pagination view command
+//     // php artisan vendor:publish --tag=laravel-pagination
 
-        // $posts=DB::table('posts')->get();
-         $posts=DB::table('posts')->paginate(1);
+//         // $posts=DB::table('posts')->get();
+//          $posts=DB::table('posts')->paginate(1);
 
-        return view('posts',['posts'=>$posts],['isPosted'=>true]);
+//         return view('posts',['posts'=>$posts],['isPosted'=>true]);
 
-   }
+//    }
 
-   function getDataJson(){
+//    function getDataJson(){
 
-    $data=DB::table('posts')->paginate(3);
-    return $data;
+//     $data=DB::table('posts')->paginate(3);
+//     return $data;
 
-   }
+//    }
 
 
 }
