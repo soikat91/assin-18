@@ -23,14 +23,6 @@ class PostController extends Controller
 
  function getCount($categoryId){
 
-//     // $category=Category::findOrFail($categoryId);
-
-//     // if($category){
-//     //     return $category->posts->count();
-//     // }else{
-//     //     echo "Not Category Id Found.Please Valid Id insert";
-//     // }
-     //$postCount=Post::where('category_id',$categoryId)->count();
      $postCount=Post::where('category_id',$categoryId)->count();
     return $postCount;
 
@@ -40,16 +32,6 @@ class PostController extends Controller
 // task-7
 function deletePost($id){
 
-    // $deletePost=DB::table('posts')->find('4')->delete();
-    // return $deletePost;
-
-    // $delete=Post::latest();
-    // return $delete->onlyTrashed();
-
-    //$delete=Post::withTrashed()->where('id',4)->get();
-
-    // $delete=DB::table('posts')->find($id)
-    //             ->delete();
 
     $delete=Post::findOrFail($id)->delete();  
     
@@ -70,14 +52,13 @@ public function getSoftData(){
 }
 
 
-
 // task=9
 function displayPost(){
 
     $posts=DB::table('posts')
             ->join('categories','posts.category_id','=','categories.id')            
             ->get();
-   // return $posts;
+   
 
    return view('posts',compact('posts'));
 
@@ -115,5 +96,7 @@ function getLatestCategoryPosts(){
 
     return view('categories',compact('categoriesPost'));
 }
+
+
 
 }
